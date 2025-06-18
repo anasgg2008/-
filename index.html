@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>لو خيروك</title>
@@ -12,68 +11,83 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
-    }
+    }.question {
+  font-size: 1.8rem;
+  margin: 20px;
+  color: white;
+}
 
-    .question {
-      font-size: 1.8rem;
-      margin: 30px;
-      color: white;
-    }
+.option {
+  padding: 25px;
+  margin: 15px auto;
+  width: 85%;
+  border-radius: 14px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
 
-    .option {
-      padding: 20px;
-      margin: 15px auto;
-      width: 80%;
-      border-radius: 12px;
-      font-size: 1.4rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+.option-blue {
+  background: #00f0ff;
+  color: black;
+  box-shadow: 0 0 25px #00f0ff;
+}
 
-    .option-blue {
-      background: #00f0ff;
-      color: black;
-      box-shadow: 0 0 20px #00f0ff;
-    }
+.option-red {
+  background: #ff0055;
+  color: white;
+  box-shadow: 0 0 25px #ff0055;
+}
 
-    .option-red {
-      background: #ff0055;
-      color: white;
-      box-shadow: 0 0 20px #ff0055;
-    }
+.option:hover {
+  transform: scale(1.05);
+}
 
-    .option:hover {
-      transform: scale(1.05);
-    }
   </style>
 </head>
 <body>
   <div class="question" id="question">لو خيروك...</div>
-  <div class="option option-blue" id="option1" onclick="nextQuestion(1)">خيار 1</div>
-  <div class="option option-red" id="option2" onclick="nextQuestion(2)">خيار 2</div>
-
-  <script>
+  <div class="option option-blue" id="option1" onclick="choose(1)">خيار 1</div>
+  <div class="option option-red" id="option2" onclick="choose(2)">خيار 2</div>  <script>
     const questions = [
-      { q: "لو خيروك تعيش بدون إنترنت أو بدون كهرباء؟", a: "بدون إنترنت", b: "بدون كهرباء" },
-      { q: "لو خيروك تاكل نفس الأكل طول حياتك أو تنام 3 ساعات فقط يومياً؟", a: "نفس الأكل", b: "3 ساعات نوم" },
-      { q: "لو خيروك تعيش في الفضاء أو تعيش تحت البحر؟", a: "الفضاء", b: "تحت البحر" },
-      { q: "لو خيروك تملك مليون دولار أو تعيش 10 سنوات زيادة؟", a: "مليون دولار", b: "10 سنوات" },
-      { q: "لو خيروك تكون مشهور ومكروه أو عادي ومحبوب؟", a: "مشهور ومكروه", b: "عادي ومحبوب" },
-      // رح أضيف لاحقًا 900 سؤال هون
+      // 900 سؤال مولدين تلقائيًا
+      
+      // سيتم استبدال هذا القسم بقائمة الأسئلة تلقائيًا
+      ...Array.from({length: 900}, (_, i) => ({
+        q: `لو خيروك الخيار ${i + 1} أو الخيار ${i + 2}?`,
+        a: `الخيار ${i + 1}`,
+        b: `الخيار ${i + 2}`
+      }))
     ];
 
-    function nextQuestion() {
-      const random = Math.floor(Math.random() * questions.length);
-      const current = questions[random];
+    let current = {};
+
+    function showQuestion() {
+      current = questions[Math.floor(Math.random() * questions.length)];
       document.getElementById("question").textContent = current.q;
       document.getElementById("option1").textContent = current.a;
       document.getElementById("option2").textContent = current.b;
     }
 
-    // أول تحميل
-    nextQuestion();
-  </script>
-</body>
+    function choose(selected) {
+      const percent1 = Math.floor(Math.random() * 50) + 50;
+      const percent2 = 100 - percent1;
+
+      if (selected === 1) {
+        document.getElementById("option1").textContent = `${percent1}%`;
+        document.getElementById("option2").textContent = `${percent2}%`;
+      } else {
+        document.getElementById("option1").textContent = `${percent2}%`;
+        document.getElementById("option2").textContent = `${percent1}%`;
+      }
+
+      // بعد 3 ثواني نعرض سؤال جديد
+      setTimeout(showQuestion, 3000);
+    }
+
+    showQuestion();
+  </script></body>
 </html>
