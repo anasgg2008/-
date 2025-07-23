@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>سجل المبيعات اليومية</title>
+  <link rel="manifest" href="manifest.json" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(err => console.error('Service Worker registration failed:', err));
+    }
+  </script>
+  <style>
+    /* عام */
+    body {
+      background-color: #111;
+      color: #eee;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px 15px;
+      direction: rtl;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    h1, h2, h3 {
+      font-weight: 600;
+      margin: 10px 0 15px;
+      color: #f0f0f0;
+      user-select: none;
+    }
+    /* شريط علوي */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      margin-bottom: 15px;
+    }
+    .menu-btn {
+      font-size: 28px;
+      background: none;
+      border: none;
+      color: #eee;
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+    .menu-btn:hover {
+      background-color: #333;
+    }
+    /* القائمة الجانبية */
+    #menu {
+      display: none;
+      position: absolute;
+      top: 50px;
+      left: 10px;
+      background-color: #222;
+      border: 1.5px solid #444;
+      border-radius: 12px;
+      z-index: 999;
+      padding: 12px 15px;
+      min-width: 170px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+      user-select: none;
+    }
+    #menu a {
+      display: block;
+      color: #eee;
+      text-decoration: none;
+      margin-bottom: 10px;
+      font-size: 17px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      transition: background-color 0.3s;
+    }
+    #menu a:hover {
+      background-color: #444;
+    }
+    /* ملاحظة */
+    .note {
+      text-align: center;
+      color: #bbb;
+      font-size: 14px;
+      margin-bottom: 25px;
+      user-select: none;
+    }
+    /* صناديق الشهر واليوم */
+    .month-summary, .day {
+      background-color: #222;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 0 15px #000;
+    }
+    .summary {
+      color: #999;
+      font-weight: 500;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+    /* صناديق المنتجات */
+    .product-box {
+      background-color: #333;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
+      position: relative;
+      color: #eee;
+      user-select: none;
+    }
+    .product-box strong {
+      font-size: 18px;
+    }
+    /* أزرار */
+    button {
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      padding: 8px 14px;
+      transition: background-color 0.25s;
+      user-select: none;
+    }
+    /* أزرار الحذف */
+    .delete-day-btn, .delete-product-btn {
+      background-color: #d32f2f;
+      color: white;
+      margin-left: 7px;
+    }
+    .delete-day-btn:hover, .delete-product-btn:hover {
+      background-color: #a82222;
+    }
+    /* زر تعديل */
+    .edit-product-btn {
+      background-color: #3949ab;
+      color: white;
+      margin-left: 7px;
+    }
+    .edit-product-btn:hover {
+      background-color: #2c387e;
+    }
+    /* زر نسخ */
+    .copy-btn {
+      background-color: #2e7d32;
+      color: white;
+      margin-left: 7px;
+    }
+    .copy-btn:hover {
+      background-color: #1b4d1b;
+    }
+    /* أزرار التصدير */
+    #exportAllBtn, .export-month-btn, .export-day-btn {
+      background-color: #0288d1;
+      color: white;
+      width: 100%;
+      max-width: 350px;
+      margin: 15px auto 0;
+      display: block;
+      box-shadow: 0 0 12px #0277bd;
+      font-weight: 600;
+    }
+    #exportAllBtn:hover, .export-month-btn:hover, .export-day-btn:hover {
+      background-color: #01579b;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <button class="menu-btn" aria-label="قائمة التنقل" onclick="toggleMenu()">⋮</button>
+    <h1>📅 سجل المبيعات اليومية</h1>
+    <nav id="menu" aria-label="قائمة التنقل">
+      <a href="index.html">🏠 الواجهة الرئيسية</a>
+      <a href="products.html">➕ إضافة منتج</a>
+      <a href="sales.html">📊 سجل المبيعات</a>
+    </nav>
+  </div>
+
+  <div class="note">🗂️ تحتوي هذه الصفحة على كل المبيعات التي تم حفظها من جهازك حسب الأيام.</div>
+
+  <button id="exportAllBtn" title="تصدير كل البيانات">📤 تصدير كل البيانات كـ JSON</button>
+
+  <div id="sales"></div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    // إخفاء القائمة إذا ضغط المستخدم خارجها
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById("menu");
+      const btn = document.querySelector(".menu-btn");
+      if (menu.style.display === "block" && !menu.contains(e.target) && e.target !== btn) {
+        menu.style.display = "none";
+      }
+    });
+
+    const salesDiv = document.getElementById("sales");
+    const colors = ["#cc2222", "#2266cc", "#22aa55", "#ccaa22", "#8822cc"];
+    let colorIndex = 0;
+
+    const allSales = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith("sales-")) {
+        const day = key.replace("sales-", "");
+        const data = JSON.parse(localStorage.getItem(key));
+        allSales.push({ day, data });
+      }
+    }
+    allSales.sort((a, b) => b.day.localeCompare(a.day));
+
+    const groupedByMonth = {};
+    allSales.forEach(({ day, data }) => {
+      const month = day.slice(0, 7);
+      if (!groupedByMonth[month]) groupedByMonth[month] = [];
+      groupedByMonth[month].push({ day, data });
+    });
+
+    for (const month in groupedByMonth) {
+      const monthBox = document.createElement("div");
+      monthBox.className = "month-summary";
+
+      let monthProfit = 0;
+      let monthQuantity = 0;
+
+      const monthDaysHTML = groupedByMonth[month].map(({ day, data }) => {
+        let dayProfit = 0;
+        let dayQuantity = 0;
+        const productsHTML = data.map((item, index) => {
+          const profit = parseFloat(item.profit || (item.sellPrice - (item.costPrice * item.quantity)));
+          dayProfit += profit;
+          dayQuantity += item.quantity;
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+          return `
+            <div class="product-box" style="background-color: ${color}">
+              <strong>📦 ${item.product}</strong><br>
+              🔢 الكمية: ${item.quantity}<br>
+              💰 السعر الإجمالي: ${item.sellPrice} ل.س<br>
+              💵 الربح: ${profit.toFixed(0)} ل.س<br>
+              🕒 ${item.time}<br>
+              <button class="edit-product-btn" onclick="editProduct('${day}', ${index})" title="تعديل المنتج">✏️ تعديل</button>
+              <button class="delete-product-btn" onclick="deleteProduct('${day}', ${index})" title="حذف المنتج">🗑️ حذف</button>
+              <button class="copy-btn" onclick="copyText('${item.product} - ${item.quantity} قطعة - ${item.sellPrice} ل.س')" title="نسخ المعلومات">📋 نسخ</button>
+            </div>
+          `;
+        }).join("");
+
+        monthProfit += dayProfit;
+        monthQuantity += dayQuantity;
+
+        return `
+          <div class="day">
+            <button class="delete-day-btn" onclick="deleteDay('${day}')" title="حذف يوم كامل">🗑️ حذف اليوم</button>
+            <h3>📆 ${day}</h3>
+            <div class="summary">عدد المنتجات: ${data.length} — الربح: ${dayProfit.toFixed(0)} ل.س — المبيعات: ${dayQuantity}</div>
+            ${productsHTML}
+            <button class="export-day-btn" onclick="exportJSON('sales-${day}', '${day}')" title="تصدير بيانات هذا اليوم">📤 تصدير هذا اليوم</button>
+          </div>
+        `;
+      }).join("");
+
+      monthBox.innerHTML = `
+        <h2>📅 الشهر: ${month}</h2>
+        <div class="summary">📈 مجموع الربح: ${monthProfit.toFixed(0)} ل.س — إجمالي المبيعات: ${monthQuantity}</div>
+        ${monthDaysHTML}
+        <button class="export-month-btn" onclick="exportMonth('${month}')" title="تصدير بيانات هذا الشهر">📤 تصدير هذا الشهر</button>
+      `;
+
+      salesDiv.appendChild(monthBox);
+    }
+
+    function deleteDay(day) {
+      if (confirm(`هل تريد حذف كل المبيعات في يوم ${day}؟`)) {
+        localStorage.removeItem("sales-" + day);
+        location.reload();
+      }
+    }
+
+    function deleteProduct(day, index) {
+      const data = JSON.parse(localStorage.getItem("sales-" + day));
+      if (!data || !data[index]) return;
+      if (confirm(`هل تريد حذف المنتج "${data[index].product}"؟`)) {
+        data.splice(index, 1);
+        if (data.length === 0) {
+          localStorage.removeItem("sales-" + day);
+        } else {
+          localStorage.setItem("sales-" + day, JSON.stringify(data));
+        }
+        location.reload();
+      }
+    }
+
+    function editProduct(day, index) {
+      const data = JSON.parse(localStorage.getItem("sales-" + day));
+      const item = data[index];
+      const newQuantity = prompt("🔢 الكمية الجديدة:", item.quantity);
+      const newSellPrice = prompt("💰 السعر الإجمالي الجديد:", item.sellPrice);
+      if (newQuantity !== null && newSellPrice !== null && newQuantity !== "" && newSellPrice !== "") {
+        item.quantity
