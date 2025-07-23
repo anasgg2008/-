@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>المخزون - Anas Store</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ffc8;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #333;
+      text-align: center;
+    }
+
+    th {
+      background-color: #333;
+      color: #00ffc8;
+    }
+
+    tr:nth-child(even) {
+      background-color: #2a2a2a;
+    }
+
+    .total-value {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #0ff;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>صفحة المخزون</h1>
+  <table id="stockTable">
+    <thead>
+      <tr>
+        <th>المنتج</th>
+        <th>الكمية</th>
+        <th>سعر الشراء</th>
+        <th>سعر البيع</th>
+        <th>الربح/قطعة</th>
+        <th>قيمة البضاعة</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="total-value" id="totalValue">إجمالي قيمة البضاعة: 0 ل.س</div>
+
+  <script>
+    const products = JSON.parse(localStorage.getItem("products") || "[]");
+    const tbody = document.querySelector("#stockTable tbody");
+    const totalValueDiv = document.getElementById("totalValue");
+    let totalValue = 0;
+
+    products.forEach(product => {
+      const name = product.name || "بدون اسم";
+      const quantity = product.quantity || 0;
+      const buyPrice = product.buyPrice || 0;
+      const sellPrice = product.sellPrice || 0;
+      const profit = sellPrice - buyPrice;
+      const value = buyPrice * quantity;
+      totalValue += value;
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${name}</td>
+        <td>${quantity}</td>
+        <td>${buyPrice} ل.س</td>
+        <td>${sellPrice} ل.س</td>
+        <td>${profit} ل.س</td>
+        <td>${value} ل.س</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    totalValueDiv.textContent = `إجمالي قيمة البضاعة: ${totalValue} ل.س`;
+  </script>
+</body>
+</html>
