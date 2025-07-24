@@ -1,30 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <link rel="manifest" href="manifest.json" />
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker registered'))
-        .catch(err => console.error('Service Worker registration failed:', err));
-    }
-  </script>
   <meta charset="UTF-8" />
   <title>واجهة البيع</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     body {
-      <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => {
-        console.log('✅ Service Worker تم تسجيله بنجاح:', reg.scope);
-      })
-      .catch(err => {
-        console.error('❌ فشل تسجيل Service Worker:', err);
-      });
-  }
-</script>
       background-color: #111;
       color: white;
       font-family: sans-serif;
@@ -123,6 +107,18 @@
       background-color: #444;
     }
   </style>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => {
+          console.log('✅ Service Worker تم تسجيله بنجاح:', reg.scope);
+        })
+        .catch(err => {
+          console.error('❌ فشل تسجيل Service Worker:', err);
+        });
+    }
+  </script>
 </head>
 <body>
   <!-- زر القائمة -->
@@ -234,7 +230,7 @@
         return;
       }
 
-      // ✅ تحقق من الكمية المتوفرة
+      // تحقق من الكمية المتوفرة
       const availableStock = products[prod].stock || 0;
       if (qty > availableStock) {
         alert(`الكمية المطلوبة غير متوفرة. الكمية المتوفرة حالياً: ${availableStock}`);
@@ -254,7 +250,7 @@
 
       todayProfit += profit;
 
-      // ✅ خصم الكمية من المخزون وتحديث التخزين
+      // خصم الكمية من المخزون وتحديث التخزين
       products[prod].stock = availableStock - qty;
       localStorage.setItem("products", JSON.stringify(products));
       localStorage.setItem(getTodayKey("sales"), JSON.stringify(todaySales));
@@ -271,7 +267,7 @@
 
     function toggleMenu() {
       const menu = document.getElementById("menu");
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
+      menu.style.display = menu.style.display === "block" ? "none" : "none" ? "block" : "block";
     }
 
     saveBtn.addEventListener("click", saveSale);
@@ -281,6 +277,4 @@
 
     populateProducts();
     updateSummary();
-  </script>
-</body>
-</html>
+  </
