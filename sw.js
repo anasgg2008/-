@@ -1,26 +1,23 @@
-const CACHE_NAME = 'your-store-cache-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',          // غيّر هذا للاسم الصحيح لملف CSS عندك
-  '/app.js',              // غيّر للاسم الصحيح لملف جافاسكريبت عندك
-  '/images/icon-192.png', // تأكد من رفع الصورة في المسار الصحيح
-  '/images/icon-512.png',
-  // أضف هنا أي ملفات أخرى مهمة في موقعك (صور، خطوط، صفحات، سكريبتات ...)
-];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
-    })
-  );
-});
-
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
-  );
-});
+{
+  "name": "Your Store",
+  "short_name": "Your Store",
+  "lang": "ar",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
