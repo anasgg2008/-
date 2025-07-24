@@ -14,6 +14,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
+      <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => {
+        console.log('✅ Service Worker تم تسجيله بنجاح:', reg.scope);
+      })
+      .catch(err => {
+        console.error('❌ فشل تسجيل Service Worker:', err);
+      });
+  }
+</script>
       background-color: #111;
       color: white;
       font-family: sans-serif;
