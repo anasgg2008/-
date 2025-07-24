@@ -1,6 +1,6 @@
 {
-  "name": "متجر أنس",
-  "short_name": "ABK",
+  "name": "Your Store",
+  "short_name": "Your Store",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#333333",
