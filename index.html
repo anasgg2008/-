@@ -5,165 +5,221 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Anas Store</title>
 <style>
-  body {
-    background-color: #111;
-    color: #0ff;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  .container {
-    padding: 20px;
-  }
-  h1 {
-    text-align: center;
-    color: #0ff;
-  }
-  .product-box {
-    border: 1px solid #0ff;
-    border-radius: 10px;
-    padding: 10px;
-    margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .triangle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-  }
-  .triangle div {
-    border: 1px solid #0ff;
-    border-radius: 10px;
-    padding: 10px;
-    width: 30%;
-    text-align: center;
-    font-size: 1.2em;
-  }
-  .save-btn {
-    background-color: red;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 20px;
-    font-size: 1.2em;
-  }
-
-  /* قائمة الثلاث نقاط */
-  #menuBtn {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    background: #333;
-    color: #0ff;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    z-index: 100;
-  }
-  #menuDropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    background: #222;
-    border: 1px solid #555;
-    min-width: 150px;
-    z-index: 100;
-  }
-  #menuDropdown a {
-    display: block;
-    padding: 10px;
-    color: #0ff;
-    text-decoration: none;
-  }
-  #menuDropdown a:hover {
-    background: #0ff;
-    color: #000;
-  }
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+        color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background-color: #111;
+        padding: 15px;
+        text-align: center;
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #00ffea;
+        letter-spacing: 2px;
+    }
+    main {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 30px;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+    .box {
+        background: #222;
+        border-radius: 15px;
+        padding: 20px;
+        min-width: 300px;
+        flex: 1 1 300px;
+        box-shadow: 0 0 15px rgba(0,255,234,0.5);
+    }
+    .box h2 {
+        color: #00ffea;
+        text-align: center;
+    }
+    label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+    }
+    select, input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        margin-bottom: 15px;
+        font-size: 1em;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1em;
+        border: none;
+        border-radius: 12px;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .sell-btn {
+        background: #ff0054;
+        color: #fff;
+        box-shadow: 0 0 10px #ff0054;
+    }
+    .sell-btn:hover {
+        background: #ff3380;
+    }
+    .summary {
+        margin-top: 20px;
+        font-size: 1.1em;
+        text-align: center;
+        line-height: 1.6em;
+        background: #111;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,255,234,0.5);
+    }
+    nav {
+        position: fixed;
+        top: 15px;
+        right: 20px;
+        background: #111;
+        padding: 10px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,255,234,0.5);
+    }
+    nav select {
+        background: #111;
+        color: #00ffea;
+        border: none;
+        padding: 8px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+    }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>Anas Store</h1>
+<header>Anas Store</header>
 
-  <div class="product-box">
-    <span>المنتج 1</span>
-    <input type="number" id="qty1" placeholder="العدد" min="0">
-  </div>
-  <div class="product-box">
-    <span>المنتج 2</span>
-    <input type="number" id="qty2" placeholder="العدد" min="0">
-  </div>
-  <div class="product-box">
-    <span>المنتج 3</span>
-    <input type="number" id="qty3" placeholder="العدد" min="0">
-  </div>
+<nav>
+<select id="navOptions">
+    <option value="">☰ الخيارات</option>
+    <option value="stocks.html">المخزون</option>
+    <option value="sales.html">المبيعات</option>
+</select>
+</nav>
 
-  <div class="triangle">
-    <div id="productSelect">اختر المنتج</div>
-    <div id="totalQty">العدد الإجمالي</div>
-    <div id="totalPrice">السعر الإجمالي</div>
-  </div>
-
-  <button class="save-btn" id="saveBtn">احفظ</button>
-</div>
-
-<!-- قائمة الثلاث نقاط -->
-<button id="menuBtn">☰</button>
-<div id="menuDropdown">
-  <a href="stock.html">المخزون</a>
-  <a href="sales.html">المبيعات</a>
-</div>
+<main>
+    <div class="box">
+        <h2>بيع منتج</h2>
+        <label for="product">اختر المنتج:</label>
+        <select id="product">
+            <option value="">-- اختر منتج --</option>
+        </select>
+        <label for="quantity">الكمية المباعة:</label>
+        <input type="number" id="quantity" min="1" placeholder="أدخل عدد القطع">
+        <button class="sell-btn" id="sellBtn">بيع</button>
+        <div class="summary" id="summary">
+            <p>إجمالي المبيعات: 0</p>
+            <p>الربح الكلي: 0</p>
+        </div>
+    </div>
+</main>
 
 <script>
-  const btn = document.getElementById('menuBtn');
-  const dropdown = document.getElementById('menuDropdown');
-  btn.addEventListener('click', () => {
-    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-  });
-  document.addEventListener('click', e => {
-    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.style.display = 'none';
+    // عناصر DOM
+    const productSelect = document.getElementById('product');
+    const quantityInput = document.getElementById('quantity');
+    const sellBtn = document.getElementById('sellBtn');
+    const summaryDiv = document.getElementById('summary');
+    const navOptions = document.getElementById('navOptions');
+
+    // تخزين بيانات المخزون (ستُملأ من stocks.html لاحقًا)
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+    let salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+
+    // تحديث قائمة المنتجات
+    function updateProductList() {
+        productSelect.innerHTML = '<option value="">-- اختر منتج --</option>';
+        products.forEach(p => {
+            productSelect.innerHTML += `<option value="${p.name}">${p.name} (المتبقي: ${p.stock})</option>`;
+        });
     }
-  });
 
-  // مثال لحساب إجمالي الكمية والسعر (تخزين مؤقت فقط)
-  const qty1 = document.getElementById('qty1');
-  const qty2 = document.getElementById('qty2');
-  const qty3 = document.getElementById('qty3');
-  const totalQty = document.getElementById('totalQty');
-  const totalPrice = document.getElementById('totalPrice');
-  const saveBtn = document.getElementById('saveBtn');
+    // حساب الملخص
+    function updateSummary() {
+        let totalSales = 0;
+        let totalProfit = 0;
+        salesData.forEach(sale => {
+            totalSales += sale.totalPrice;
+            totalProfit += sale.profit;
+        });
+        summaryDiv.innerHTML = `<p>إجمالي المبيعات: ${totalSales}</p><p>الربح الكلي: ${totalProfit}</p>`;
+    }
 
-  function updateTotals() {
-    const q1 = parseInt(qty1.value) || 0;
-    const q2 = parseInt(qty2.value) || 0;
-    const q3 = parseInt(qty3.value) || 0;
-    const total = q1 + q2 + q3;
-    totalQty.textContent = 'العدد الإجمالي: ' + total;
-    const price = (q1*1000) + (q2*2000) + (q3*1500); // مثال على الأسعار
-    totalPrice.textContent = 'السعر الإجمالي: ' + price;
-  }
+    // بيع المنتج
+    sellBtn.addEventListener('click', () => {
+        const productName = productSelect.value;
+        const quantity = parseInt(quantityInput.value);
+        if (!productName || isNaN(quantity) || quantity <= 0) {
+            alert('اختر المنتج وأدخل كمية صحيحة');
+            return;
+        }
 
-  qty1.addEventListener('input', updateTotals);
-  qty2.addEventListener('input', updateTotals);
-  qty3.addEventListener('input', updateTotals);
+        const product = products.find(p => p.name === productName);
+        if (!product) {
+            alert('المنتج غير موجود بالمخزون');
+            return;
+        }
+        if (quantity > product.stock) {
+            alert('الكمية المطلوبة أكبر من المخزون');
+            return;
+        }
 
-  saveBtn.addEventListener('click', () => {
-    const salesData = {
-      product1: parseInt(qty1.value) || 0,
-      product2: parseInt(qty2.value) || 0,
-      product3: parseInt(qty3.value) || 0,
-      timestamp: new Date().toISOString()
-    };
-    // تخزين محلي مؤقت
-    localStorage.setItem('lastSale', JSON.stringify(salesData));
-    alert('تم الحفظ مؤقتاً (سيتم ربطه لاحقاً مع صفحة المبيعات)');
-  });
+        const totalPrice = product.salePrice * quantity;
+        const profit = (product.salePrice - product.costPrice) * quantity;
+
+        // تحديث المخزون
+        product.stock -= quantity;
+        localStorage.setItem('products', JSON.stringify(products));
+
+        // تسجيل البيع
+        salesData.push({
+            name: productName,
+            quantity: quantity,
+            totalPrice: totalPrice,
+            profit: profit,
+            date: new Date().toLocaleDateString()
+        });
+        localStorage.setItem('salesData', JSON.stringify(salesData));
+
+        quantityInput.value = '';
+        updateProductList();
+        updateSummary();
+    });
+
+    // تحديث قائمة التنقل
+    navOptions.addEventListener('change', () => {
+        if (navOptions.value) {
+            window.location.href = navOptions.value;
+        }
+    });
+
+    // تهيئة الصفحة
+    updateProductList();
+    updateSummary();
 </script>
 </body>
 </html>
