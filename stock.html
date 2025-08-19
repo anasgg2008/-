@@ -115,6 +115,21 @@
     #menu a:hover {
       background-color: #444;
     }
+    .action-btn {
+      margin: 2px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+    .edit-btn {
+      background-color: orange;
+      color: white;
+    }
+    .delete-btn {
+      background-color: red;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -152,6 +167,7 @@
         <th>سعر الشراء</th>
         <th>الكمية</th>
         <th>القيمة الإجمالية</th>
+        <th>خيارات</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -162,6 +178,12 @@
   </div>
 
   <script>
+    // إذا المستخدم جديد، ابدأ من الصفر
+    if (!localStorage.getItem("visitedBefore")) {
+      localStorage.setItem("products", JSON.stringify({}));
+      localStorage.setItem("visitedBefore", "true");
+    }
+
     let products = JSON.parse(localStorage.getItem("products")) || {};
 
     function toggleMenu() {
@@ -183,15 +205,18 @@
         const value = prod.cost * (prod.stock || 0);
         total += value;
 
-        const row = `
-          <tr>
-            <td>${name}</td>
-            <td>${prod.cost}</td>
-            <td>${prod.stock || 0}</td>
-            <td>${value}</td>
-          </tr>
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${name}</td>
+          <td>${prod.cost}</td>
+          <td>${prod.stock || 0}</td>
+          <td>${value}</td>
+          <td>
+            <button class="action-btn edit-btn" onclick="editProduct('${name}')">تعديل</button>
+            <button class="action-btn delete-btn" onclick="deleteProduct('${name}')">حذف</button>
+          </td>
         `;
-        tbody.innerHTML += row;
+        tbody.appendChild(row);
       }
 
       document.getElementById("totalValue").textContent = total.toFixed(0);
@@ -217,10 +242,35 @@
       saveProducts();
       updateTable();
 
-      // تصفير الحقول
       document.getElementById("nameInput").value = "";
       document.getElementById("costInput").value = "";
       document.getElementById("stockInput").value = "";
+    }
+
+    function editProduct(name) {
+      const prod = products[name];
+      const newName = prompt("تعديل اسم المنتج:", name);
+      if (!newName) return;
+      const newCost = parseFloat(prompt("تعديل سعر الشراء:", prod.cost));
+      if (!newCost || newCost <= 0) return;
+      const newStock = parseInt(prompt("تعديل الكمية:", prod.stock));
+      if (!newStock || newStock <= 0) return;
+
+      // إذا غيرنا الاسم، نحذف القديم ونضيف الجديد
+      if (newName !== name) {
+        delete products[name];
+      }
+      products[newName] = { cost: newCost, stock: newStock };
+
+      saveProducts();
+      updateTable();
+    }
+
+    function deleteProduct(name) {
+      if (!confirm(`هل أنت متأكد من حذف المنتج ${name}؟`)) return;
+      delete products[name];
+      saveProducts();
+      updateTable();
     }
 
     updateTable();
