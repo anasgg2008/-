@@ -1,146 +1,112 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>سجل المبيعات</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  background-color: #111;
-  color: white;
-  font-family: sans-serif;
-  padding: 20px;
-  direction: rtl;
-}
-h1 {
-  text-align: center;
-  font-size: 28px;
-  margin-bottom: 15px;
-  color: #0ff;
-  text-shadow: 0 0 10px #0ff;
-}
-#menu-btn {
-  font-size: 28px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 5px 10px;
-}
-#menu {
-  display: none;
-  background: #222;
-  border: 1px solid #444;
-  padding: 10px;
-  position: absolute;
-  top: 40px;
-  left: 10px;
-  z-index: 9999;
-  border-radius: 10px;
-  min-width: 150px;
-}
-#menu a {
-  display: block;
-  color: white;
-  text-decoration: none;
-  margin-bottom: 5px;
-  text-align: right;
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 6px;
-}
-#menu a:hover {
-  background-color: #444;
-}
-#filter-container {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-}
-select, button {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  font-size: 16px;
-}
-button {
-  background-color: #0ff;
-  color: black;
-  cursor: pointer;
-  box-shadow: 0 0 10px #0ff;
-}
-button:hover {
-  background-color: #00cccc;
-  box-shadow: 0 0 15px #0ff;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-th, td {
-  border: 1px solid #444;
-  padding: 8px;
-  text-align: center;
-}
-th {
-  background-color: #222;
-  cursor: pointer;
-}
-td {
-  background-color: #111;
-}
-.summary {
-  margin-top: 15px;
-  font-size: 20px;
-  text-align: center;
-  color: #0ff;
-  text-shadow: 0 0 5px #0ff;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>سجل المبيعات</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+      direction: rtl;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    #menu-btn {
+      font-size: 28px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 5px 10px;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+    #menu {
+      display: none;
+      background: #222;
+      border: 1px solid #444;
+      padding: 10px;
+      position: absolute;
+      top: 50px;
+      left: 10px;
+      z-index: 9999;
+      border-radius: 10px;
+      min-width: 150px;
+    }
+    #menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      margin-bottom: 5px;
+      text-align: right;
+      font-size: 16px;
+      padding: 5px 10px;
+      border-radius: 6px;
+    }
+    #menu a:hover {
+      background-color: #444;
+    }
+    .sales-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .month-box {
+      background-color: #222;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 0 10px #00f;
+    }
+    .month-header {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .day-box {
+      background-color: #333;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      box-shadow: 0 0 8px #00f;
+    }
+    .day-header {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .sale-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 5px;
+      border-bottom: 1px solid #444;
+    }
+    .delete-btn {
+      background-color: red;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      padding: 2px 6px;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body>
 
 <button id="menu-btn" onclick="toggleMenu()">⋮</button>
 <div id="menu">
-  <a href="index.html">🏠 الصفحة الرئيسية</a>
+  <a href="index.html">🏠 الصفحة الرئيسة</a>
   <a href="stocks.html">📦 إدارة المخزون</a>
 </div>
 
 <h1>سجل المبيعات</h1>
-
-<div id="filter-container">
-  <select id="dayFilter">
-    <option value="">عرض كل الأيام</option>
-  </select>
-  <select id="monthFilter">
-    <option value="">عرض كل الشهور</option>
-  </select>
-  <button onclick="clearSales()">مسح كل المبيعات</button>
-</div>
-
-<table id="salesTable">
-  <thead>
-    <tr>
-      <th onclick="sortTable(0)">المنتج</th>
-      <th onclick="sortTable(1)">الكمية</th>
-      <th onclick="sortTable(2)">سعر البيع</th>
-      <th onclick="sortTable(3)">الإجمالي</th>
-      <th onclick="sortTable(4)">الربح</th>
-      <th onclick="sortTable(5)">اليوم</th>
-      <th onclick="sortTable(6)">الوقت</th>
-      <th>حذف</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<div class="summary">
-  إجمالي المبيعات اليومية: <span id="dailyTotal">0</span> ل.س | إجمالي الربح اليومي: <span id="dailyProfit">0</span> ل.س<br>
-  إجمالي المبيعات الشهرية: <span id="monthlyTotal">0</span> ل.س | إجمالي الربح الشهري: <span id="monthlyProfit">0</span> ل.س
-</div>
+<div class="sales-container" id="salesContainer"></div>
 
 <script>
 function toggleMenu() {
@@ -148,83 +114,105 @@ function toggleMenu() {
   menu.style.display = menu.style.display === "block" ? "none" : "block";
 }
 
+// جلب البيانات
 let sales = JSON.parse(localStorage.getItem("sales")) || [];
+let stocks = JSON.parse(localStorage.getItem("stocks")) || {};
 
-function updateFilters() {
-  const dayFilter = document.getElementById("dayFilter");
-  const monthFilter = document.getElementById("monthFilter");
-  const days = [...new Set(sales.map(s => s.day))].sort((a,b)=>b.localeCompare(a));
-  const months = [...new Set(sales.map(s => s.month))].sort((a,b)=>b.localeCompare(a));
-  dayFilter.innerHTML = '<option value="">عرض كل الأيام</option>' + days.map(d=>`<option value="${d}">${d}</option>`).join('');
-  monthFilter.innerHTML = '<option value="">عرض كل الشهور</option>' + months.map(m=>`<option value="${m}">${m}</option>`).join('');
+function saveSales() {
+  localStorage.setItem("sales", JSON.stringify(sales));
 }
 
-function updateSalesTable() {
-  const tbody = document.querySelector("#salesTable tbody");
-  tbody.innerHTML = "";
-  const daySelected = document.getElementById("dayFilter").value;
-  const monthSelected = document.getElementById("monthFilter").value;
-
-  let filteredSales = sales;
-  if(daySelected) filteredSales = filteredSales.filter(s=>s.day===daySelected);
-  if(monthSelected) filteredSales = filteredSales.filter(s=>s.month===monthSelected);
-
-  filteredSales.slice().reverse().forEach((sale, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${sale.name}</td>
-      <td>${sale.quantity}</td>
-      <td>${sale.price}</td>
-      <td>${sale.total}</td>
-      <td>${sale.profit}</td>
-      <td>${sale.day}</td>
-      <td>${sale.time}</td>
-      <td><button onclick="deleteSale(${index})">❌</button></td>
-    `;
-    tbody.appendChild(row);
-  });
-
-  // احصائيات يومية وشهرية
-  const today = new Date();
-  const todayStr = today.toLocaleDateString('ar-EG');
-  const monthStr = today.getMonth()+1 + '-' + today.getFullYear();
-  let dailyTotal=0, dailyProfit=0, monthlyTotal=0, monthlyProfit=0;
-  sales.forEach(s=>{
-    if(s.day===todayStr){dailyTotal+=s.total; dailyProfit+=s.profit;}
-    if(s.month===monthStr){monthlyTotal+=s.total; monthlyProfit+=s.profit;}
-  });
-  document.getElementById("dailyTotal").textContent = dailyTotal.toFixed(0);
-  document.getElementById("dailyProfit").textContent = dailyProfit.toFixed(0);
-  document.getElementById("monthlyTotal").textContent = monthlyTotal.toFixed(0);
-  document.getElementById("monthlyProfit").textContent = monthlyProfit.toFixed(0);
+function saveStocks() {
+  localStorage.setItem("stocks", JSON.stringify(stocks));
 }
 
-function deleteSale(idx) {
-  if(confirm("هل تريد حذف هذه المبيعة؟")) {
-    sales.splice(idx,1);
-    localStorage.setItem("sales", JSON.stringify(sales));
-    updateFilters();
-    updateSalesTable();
+function deleteSale(monthKey, dayKey, index) {
+  const sale = sales[monthKey][dayKey][index];
+  // إعادة الكمية للمخزون
+  if(stocks[sale.name]) {
+    stocks[sale.name].stock += sale.quantity;
+  } else {
+    stocks[sale.name] = { stock: sale.quantity, cost: sale.cost || 0 };
   }
+  alert(`تمت إعادة ${sale.quantity} ${sale.name} للمخزون`);
+  // حذف البيع
+  sales[monthKey][dayKey].splice(index, 1);
+  if(sales[monthKey][dayKey].length === 0) delete sales[monthKey][dayKey];
+  if(Object.keys(sales[monthKey]).length === 0) delete sales[monthKey];
+  saveSales();
+  saveStocks();
+  renderSales();
 }
 
-function clearSales() {
-  if(confirm("هل تريد مسح كل المبيعات؟")) {
-    sales=[];
-    localStorage.setItem("sales", JSON.stringify(sales));
-    updateFilters();
-    updateSalesTable();
-  }
+function renderSales() {
+  const container = document.getElementById("salesContainer");
+  container.innerHTML = "";
+
+  const months = Object.keys(sales).sort((a,b)=>b.localeCompare(a));
+  months.forEach(monthKey => {
+    const monthBox = document.createElement("div");
+    monthBox.className = "month-box";
+
+    // احصائيات الشهر
+    let monthTotal = 0;
+    let monthProfit = 0;
+    for(const dayKey in sales[monthKey]){
+      sales[monthKey][dayKey].forEach(sale=>{
+        monthTotal += sale.total;
+        monthProfit += sale.profit;
+      });
+    }
+
+    monthBox.innerHTML = `<div class="month-header">شهر ${monthKey} - المبيعات: ${monthTotal.toFixed(0)} ل.س | الأرباح: ${monthProfit.toFixed(0)} ل.س</div>`;
+
+    const days = Object.keys(sales[monthKey]).sort((a,b)=>b.localeCompare(a));
+    days.forEach(dayKey=>{
+      const dayBox = document.createElement("div");
+      dayBox.className = "day-box";
+
+      let dayTotal = 0;
+      let dayProfit = 0;
+      sales[monthKey][dayKey].forEach(sale=>{
+        dayTotal += sale.total;
+        dayProfit += sale.profit;
+      });
+
+      dayBox.innerHTML = `<div class="day-header">اليوم ${dayKey} - المبيعات: ${dayTotal.toFixed(0)} ل.س | الأرباح: ${dayProfit.toFixed(0)} ل.س</div>`;
+
+      // عرض المنتجات اليومية
+      sales[monthKey][dayKey].slice().reverse().forEach((sale,index)=>{
+        const item = document.createElement("div");
+        item.className = "sale-item";
+        item.innerHTML = `${sale.name} - ${sale.quantity} × ${sale.price} = ${sale.total} | ربح: ${sale.profit} 
+        <button class="delete-btn" onclick="deleteSale('${monthKey}','${dayKey}',${index})">حذف</button>`;
+        dayBox.appendChild(item);
+      });
+
+      monthBox.appendChild(dayBox);
+    });
+
+    container.appendChild(monthBox);
+  });
 }
 
-document.getElementById("dayFilter").addEventListener("change", updateSalesTable);
-document.getElementById("monthFilter").addEventListener("change", updateSalesTable);
+// إعادة ترتيب البيانات حسب الشهر واليوم
+function organizeSales(rawSales) {
+  const organized = {};
+  rawSales.forEach(sale=>{
+    const date = new Date(sale.time);
+    const monthKey = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2,'0')}`;
+    const dayKey = `${date.getDate().toString().padStart(2,'0')}`;
+    if(!organized[monthKey]) organized[monthKey] = {};
+    if(!organized[monthKey][dayKey]) organized[monthKey][dayKey] = [];
+    organized[monthKey][dayKey].push(sale);
+  });
+  return organized;
+}
 
-updateFilters();
-updateSalesTable();
+// تحويل المبيعات الخام
+sales = organizeSales(sales);
 
-// لو بدك تقدر تضيف هنا ميزة تسجيل البيع الجديدة مباشرة من الصفحة
-// مثلا sale = {name, quantity, price, total, profit, day, month, time}; sales.push(sale); localStorage.setItem("sales", JSON.stringify(sales)); updateSalesTable();
+renderSales();
 </script>
 
 </body>
