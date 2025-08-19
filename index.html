@@ -6,155 +6,164 @@
 <title>Anas Store</title>
 <style>
   body {
-    background-color: #1e1e1e;
-    color: #fff;
+    background-color: #111;
+    color: #0ff;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
   }
-  header {
-    background-color: #111;
-    padding: 15px;
+  .container {
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    color: #0ff;
+  }
+  .product-box {
+    border: 1px solid #0ff;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #0ff;
-  }
-  .menu {
-    position: relative;
-    display: inline-block;
-  }
-  .menu-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: #222;
-    min-width: 160px;
-    z-index: 1;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .menu-content a {
-    color: white;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
-  .menu-content a:hover {
-    background-color: #333;
-  }
-  .menu:hover .menu-content {
-    display: block;
-  }
-  main {
-    padding: 20px;
-  }
   .triangle {
-    width: 300px;
-    height: 300px;
-    background: linear-gradient(135deg, #0ff, #f0f);
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    margin: 20px auto;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
+    margin-top: 20px;
   }
-  .triangle input, .triangle button {
-    width: 80%;
+  .triangle div {
+    border: 1px solid #0ff;
+    border-radius: 10px;
     padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    border: none;
-  }
-  .triangle input {
+    width: 30%;
     text-align: center;
+    font-size: 1.2em;
   }
   .save-btn {
     background-color: red;
-    color: white;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
     cursor: pointer;
-    font-weight: bold;
-  }
-  .stats {
     margin-top: 20px;
-    text-align: center;
+    font-size: 1.2em;
+  }
+
+  /* قائمة الثلاث نقاط */
+  #menuBtn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: #333;
+    color: #0ff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 100;
+  }
+  #menuDropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: #222;
+    border: 1px solid #555;
+    min-width: 150px;
+    z-index: 100;
+  }
+  #menuDropdown a {
+    display: block;
+    padding: 10px;
+    color: #0ff;
+    text-decoration: none;
+  }
+  #menuDropdown a:hover {
+    background: #0ff;
+    color: #000;
   }
 </style>
 </head>
 <body>
-<header>
+<div class="container">
   <h1>Anas Store</h1>
-  <div class="menu">
-    <span>☰</span>
-    <div class="menu-content">
-      <a href="sales.html">المبيعات</a>
-    </div>
+
+  <div class="product-box">
+    <span>المنتج 1</span>
+    <input type="number" id="qty1" placeholder="العدد" min="0">
   </div>
-</header>
-<main>
+  <div class="product-box">
+    <span>المنتج 2</span>
+    <input type="number" id="qty2" placeholder="العدد" min="0">
+  </div>
+  <div class="product-box">
+    <span>المنتج 3</span>
+    <input type="number" id="qty3" placeholder="العدد" min="0">
+  </div>
+
   <div class="triangle">
-    <input type="text" id="product" placeholder="اسم المنتج">
-    <input type="number" id="quantity" placeholder="العدد">
-    <input type="number" id="price" placeholder="سعر القطعة">
-    <button class="save-btn" onclick="saveSale()">احفظ</button>
+    <div id="productSelect">اختر المنتج</div>
+    <div id="totalQty">العدد الإجمالي</div>
+    <div id="totalPrice">السعر الإجمالي</div>
   </div>
-  <div class="stats">
-    <p>إجمالي المبيعات: <span id="totalSales">0</span></p>
-    <p>الربح الصافي: <span id="totalProfit">0</span></p>
-  </div>
-</main>
+
+  <button class="save-btn" id="saveBtn">احفظ</button>
+</div>
+
+<!-- قائمة الثلاث نقاط -->
+<button id="menuBtn">☰</button>
+<div id="menuDropdown">
+  <a href="stock.html">المخزون</a>
+  <a href="sales.html">المبيعات</a>
+</div>
+
 <script>
-function getSales() {
-  let sales = localStorage.getItem('anasStoreSales');
-  return sales ? JSON.parse(sales) : [];
-}
+  const btn = document.getElementById('menuBtn');
+  const dropdown = document.getElementById('menuDropdown');
+  btn.addEventListener('click', () => {
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+  });
+  document.addEventListener('click', e => {
+    if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.style.display = 'none';
+    }
+  });
 
-function saveSalesData(sales) {
-  localStorage.setItem('anasStoreSales', JSON.stringify(sales));
-}
+  // مثال لحساب إجمالي الكمية والسعر (تخزين مؤقت فقط)
+  const qty1 = document.getElementById('qty1');
+  const qty2 = document.getElementById('qty2');
+  const qty3 = document.getElementById('qty3');
+  const totalQty = document.getElementById('totalQty');
+  const totalPrice = document.getElementById('totalPrice');
+  const saveBtn = document.getElementById('saveBtn');
 
-function saveSale() {
-  const product = document.getElementById('product').value;
-  const quantity = parseInt(document.getElementById('quantity').value);
-  const price = parseFloat(document.getElementById('price').value);
-  if (!product || !quantity || !price) {
-    alert('الرجاء ملء كل الحقول!');
-    return;
+  function updateTotals() {
+    const q1 = parseInt(qty1.value) || 0;
+    const q2 = parseInt(qty2.value) || 0;
+    const q3 = parseInt(qty3.value) || 0;
+    const total = q1 + q2 + q3;
+    totalQty.textContent = 'العدد الإجمالي: ' + total;
+    const price = (q1*1000) + (q2*2000) + (q3*1500); // مثال على الأسعار
+    totalPrice.textContent = 'السعر الإجمالي: ' + price;
   }
-  
-  let sales = getSales();
-  const profit = price * quantity; // افتراض الربح = السعر * الكمية
-  const sale = {
-    product,
-    quantity,
-    price,
-    profit,
-    date: new Date().toISOString()
-  };
-  sales.push(sale);
-  saveSalesData(sales);
-  updateStats();
-  document.getElementById('product').value = '';
-  document.getElementById('quantity').value = '';
-  document.getElementById('price').value = '';
-}
 
-function updateStats() {
-  const sales = getSales();
-  const totalSales = sales.reduce((sum, s) => sum + (s.price * s.quantity), 0);
-  const totalProfit = sales.reduce((sum, s) => sum + s.profit, 0);
-  document.getElementById('totalSales').innerText = totalSales;
-  document.getElementById('totalProfit').innerText = totalProfit;
-}
+  qty1.addEventListener('input', updateTotals);
+  qty2.addEventListener('input', updateTotals);
+  qty3.addEventListener('input', updateTotals);
 
-updateStats();
+  saveBtn.addEventListener('click', () => {
+    const salesData = {
+      product1: parseInt(qty1.value) || 0,
+      product2: parseInt(qty2.value) || 0,
+      product3: parseInt(qty3.value) || 0,
+      timestamp: new Date().toISOString()
+    };
+    // تخزين محلي مؤقت
+    localStorage.setItem('lastSale', JSON.stringify(salesData));
+    alert('تم الحفظ مؤقتاً (سيتم ربطه لاحقاً مع صفحة المبيعات)');
+  });
 </script>
 </body>
 </html>
