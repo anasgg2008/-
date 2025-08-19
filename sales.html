@@ -1,181 +1,231 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anas Store</title>
+<title>سجل المبيعات</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #1a1a1a;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-  }
-  header {
-    background: #0d6efd;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #fff;
-  }
-  .menu {
-    position: relative;
-  }
-  .menu button {
-    background: #0d6efd;
-    border: none;
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-  }
-  .dropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    background: #333;
-    min-width: 150px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
-    z-index: 1;
-  }
-  .dropdown a {
-    color: #fff;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
-  .dropdown a:hover {
-    background: #575757;
-  }
-  .menu:hover .dropdown {
-    display: block;
-  }
-  main {
-    padding: 20px;
-  }
-  .sale-box {
-    background: #222;
-    padding: 20px;
-    border-radius: 12px;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-  .sale-box h2 {
-    text-align: center;
-    color: #0d6efd;
-  }
-  .sale-box label {
-    display: block;
-    margin: 10px 0 5px;
-  }
-  .sale-box select, .sale-box input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    margin-bottom: 10px;
-  }
-  .sale-box button {
-    width: 100%;
-    padding: 12px;
-    background: #0d6efd;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  .sale-box button:hover {
-    background: #0056b3;
-  }
+body {
+  background-color: #111;
+  color: white;
+  font-family: sans-serif;
+  padding: 20px;
+  direction: rtl;
+}
+h1 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: #0ff;
+  text-shadow: 0 0 10px #0ff;
+}
+#menu-btn {
+  font-size: 28px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+#menu {
+  display: none;
+  background: #222;
+  border: 1px solid #444;
+  padding: 10px;
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  z-index: 9999;
+  border-radius: 10px;
+  min-width: 150px;
+}
+#menu a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 5px;
+  text-align: right;
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+#menu a:hover {
+  background-color: #444;
+}
+#filter-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+select, button {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+}
+button {
+  background-color: #0ff;
+  color: black;
+  cursor: pointer;
+  box-shadow: 0 0 10px #0ff;
+}
+button:hover {
+  background-color: #00cccc;
+  box-shadow: 0 0 15px #0ff;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+th, td {
+  border: 1px solid #444;
+  padding: 8px;
+  text-align: center;
+}
+th {
+  background-color: #222;
+  cursor: pointer;
+}
+td {
+  background-color: #111;
+}
+.summary {
+  margin-top: 15px;
+  font-size: 20px;
+  text-align: center;
+  color: #0ff;
+  text-shadow: 0 0 5px #0ff;
+}
 </style>
 </head>
 <body>
-<header>
-  <h1>Anas Store</h1>
-  <div class="menu">
-    <button>☰</button>
-    <div class="dropdown">
-      <a href="stocks.html">المخزون</a>
-      <a href="sales.html">المبيعات</a>
-    </div>
-  </div>
-</header>
-<main>
-  <div class="sale-box">
-    <h2>صفحة البيع</h2>
-    <label for="productSelect">اختر المنتج</label>
-    <select id="productSelect">
-      <option value="">اختر المنتج</option>
-    </select>
-    <label for="quantity">العدد</label>
-    <input type="number" id="quantity" placeholder="أدخل العدد" min="1">
-    <label for="price">سعر البيع الكلي</label>
-    <input type="number" id="price" placeholder="أدخل سعر البيع" min="0">
-    <button onclick="addSale()">أضف البيع</button>
-  </div>
-</main>
+
+<button id="menu-btn" onclick="toggleMenu()">⋮</button>
+<div id="menu">
+  <a href="index.html">🏠 الصفحة الرئيسية</a>
+  <a href="stocks.html">📦 إدارة المخزون</a>
+</div>
+
+<h1>سجل المبيعات</h1>
+
+<div id="filter-container">
+  <select id="dayFilter">
+    <option value="">عرض كل الأيام</option>
+  </select>
+  <select id="monthFilter">
+    <option value="">عرض كل الشهور</option>
+  </select>
+  <button onclick="clearSales()">مسح كل المبيعات</button>
+</div>
+
+<table id="salesTable">
+  <thead>
+    <tr>
+      <th onclick="sortTable(0)">المنتج</th>
+      <th onclick="sortTable(1)">الكمية</th>
+      <th onclick="sortTable(2)">سعر البيع</th>
+      <th onclick="sortTable(3)">الإجمالي</th>
+      <th onclick="sortTable(4)">الربح</th>
+      <th onclick="sortTable(5)">اليوم</th>
+      <th onclick="sortTable(6)">الوقت</th>
+      <th>حذف</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="summary">
+  إجمالي المبيعات اليومية: <span id="dailyTotal">0</span> ل.س | إجمالي الربح اليومي: <span id="dailyProfit">0</span> ل.س<br>
+  إجمالي المبيعات الشهرية: <span id="monthlyTotal">0</span> ل.س | إجمالي الربح الشهري: <span id="monthlyProfit">0</span> ل.س
+</div>
 
 <script>
-// تحميل المنتجات من المخزون
-function loadProducts() {
-  const select = document.getElementById('productSelect');
-  select.innerHTML = '<option value="">اختر المنتج</option>';
-  const products = JSON.parse(localStorage.getItem('products')) || [];
-  products.forEach(p => {
-    const option = document.createElement('option');
-    option.value = p.name;
-    option.textContent = p.name;
-    select.appendChild(option);
-  });
+function toggleMenu() {
+  const menu = document.getElementById("menu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
 }
 
-window.onload = loadProducts;
+let sales = JSON.parse(localStorage.getItem("sales")) || [];
 
-// إضافة بيع جديد
-function addSale() {
-  const product = document.getElementById('productSelect').value;
-  const quantity = parseInt(document.getElementById('quantity').value);
-  const price = parseFloat(document.getElementById('price').value);
-  if (!product || !quantity || !price) {
-    alert('اكمل جميع الحقول!');
-    return;
-  }
-
-  // تحديث المخزون
-  let products = JSON.parse(localStorage.getItem('products')) || [];
-  const prodIndex = products.findIndex(p => p.name === product);
-  if (prodIndex === -1) {
-    alert('المنتج غير موجود في المخزون!');
-    return;
-  }
-  if (products[prodIndex].stock < quantity) {
-    alert('الكمية في المخزون غير كافية!');
-    return;
-  }
-  products[prodIndex].stock -= quantity;
-  localStorage.setItem('products', JSON.stringify(products));
-
-  // إضافة البيع
-  let sales = JSON.parse(localStorage.getItem('sales')) || [];
-  sales.push({
-    product,
-    quantity,
-    total: price,
-    date: new Date().toISOString()
-  });
-  localStorage.setItem('sales', JSON.stringify(sales));
-
-  alert('تم تسجيل البيع بنجاح!');
-  document.getElementById('quantity').value = '';
-  document.getElementById('price').value = '';
-  loadProducts(); // تحديث القائمة بعد البيع
+function updateFilters() {
+  const dayFilter = document.getElementById("dayFilter");
+  const monthFilter = document.getElementById("monthFilter");
+  const days = [...new Set(sales.map(s => s.day))].sort((a,b)=>b.localeCompare(a));
+  const months = [...new Set(sales.map(s => s.month))].sort((a,b)=>b.localeCompare(a));
+  dayFilter.innerHTML = '<option value="">عرض كل الأيام</option>' + days.map(d=>`<option value="${d}">${d}</option>`).join('');
+  monthFilter.innerHTML = '<option value="">عرض كل الشهور</option>' + months.map(m=>`<option value="${m}">${m}</option>`).join('');
 }
+
+function updateSalesTable() {
+  const tbody = document.querySelector("#salesTable tbody");
+  tbody.innerHTML = "";
+  const daySelected = document.getElementById("dayFilter").value;
+  const monthSelected = document.getElementById("monthFilter").value;
+
+  let filteredSales = sales;
+  if(daySelected) filteredSales = filteredSales.filter(s=>s.day===daySelected);
+  if(monthSelected) filteredSales = filteredSales.filter(s=>s.month===monthSelected);
+
+  filteredSales.slice().reverse().forEach((sale, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${sale.name}</td>
+      <td>${sale.quantity}</td>
+      <td>${sale.price}</td>
+      <td>${sale.total}</td>
+      <td>${sale.profit}</td>
+      <td>${sale.day}</td>
+      <td>${sale.time}</td>
+      <td><button onclick="deleteSale(${index})">❌</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  // احصائيات يومية وشهرية
+  const today = new Date();
+  const todayStr = today.toLocaleDateString('ar-EG');
+  const monthStr = today.getMonth()+1 + '-' + today.getFullYear();
+  let dailyTotal=0, dailyProfit=0, monthlyTotal=0, monthlyProfit=0;
+  sales.forEach(s=>{
+    if(s.day===todayStr){dailyTotal+=s.total; dailyProfit+=s.profit;}
+    if(s.month===monthStr){monthlyTotal+=s.total; monthlyProfit+=s.profit;}
+  });
+  document.getElementById("dailyTotal").textContent = dailyTotal.toFixed(0);
+  document.getElementById("dailyProfit").textContent = dailyProfit.toFixed(0);
+  document.getElementById("monthlyTotal").textContent = monthlyTotal.toFixed(0);
+  document.getElementById("monthlyProfit").textContent = monthlyProfit.toFixed(0);
+}
+
+function deleteSale(idx) {
+  if(confirm("هل تريد حذف هذه المبيعة؟")) {
+    sales.splice(idx,1);
+    localStorage.setItem("sales", JSON.stringify(sales));
+    updateFilters();
+    updateSalesTable();
+  }
+}
+
+function clearSales() {
+  if(confirm("هل تريد مسح كل المبيعات؟")) {
+    sales=[];
+    localStorage.setItem("sales", JSON.stringify(sales));
+    updateFilters();
+    updateSalesTable();
+  }
+}
+
+document.getElementById("dayFilter").addEventListener("change", updateSalesTable);
+document.getElementById("monthFilter").addEventListener("change", updateSalesTable);
+
+updateFilters();
+updateSalesTable();
+
+// لو بدك تقدر تضيف هنا ميزة تسجيل البيع الجديدة مباشرة من الصفحة
+// مثلا sale = {name, quantity, price, total, profit, day, month, time}; sales.push(sale); localStorage.setItem("sales", JSON.stringify(sales)); updateSalesTable();
 </script>
+
 </body>
 </html>
