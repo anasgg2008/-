@@ -1,177 +1,147 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>سجل المبيعات</title>
-  <link rel="manifest" href="manifest.json" />
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anas Store</title>
+<style>
     body {
-      background-color: #111;
-      color: white;
-      font-family: sans-serif;
-      padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        color: #fff;
+        margin: 0;
+        padding: 0;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 26px;
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #222;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 20px;
+    .triangle {
+        width: 0;
+        height: 0;
+        border-left: 150px solid transparent;
+        border-right: 150px solid transparent;
+        border-bottom: 150px solid #1a1a1a;
+        position: relative;
+        margin-bottom: 20px;
     }
-    th, td {
-      padding: 12px;
-      text-align: center;
-      border-bottom: 1px solid #444;
+    .box {
+        position: absolute;
+        width: 120px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-weight: bold;
     }
-    th {
-      background-color: #333;
+    #productBox { background-color: #007bff; top: 20px; left: 15px; }
+    #quantityBox { background-color: #28a745; top: 20px; right: 15px; }
+    #totalBox { background-color: #ffc107; bottom: -60px; left: 50%; transform: translateX(-50%); }
+    input[type=number] {
+        width: 80px;
+        padding: 5px;
+        border-radius: 8px;
+        border: none;
+        text-align: center;
     }
-    tr:hover {
-      background-color: #333;
+    button {
+        background-color: #dc3545;
+        border: none;
+        padding: 12px 24px;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 12px;
+        cursor: pointer;
+        margin-top: 20px;
     }
-    .totals {
-      margin-top: 20px;
-      background-color: #222;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #000;
+    .menu {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        cursor: pointer;
     }
-
-    /* زر الثلاث نقاط */
-    #menuBtn {
-      font-size: 28px;
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      padding: 5px 10px;
-      position: absolute;
-      top: 10px;
-      right: 10px;
+    .dropdown {
+        display: none;
+        position: absolute;
+        top: 40px;
+        right: 0;
+        background-color: #222;
+        border-radius: 8px;
+        overflow: hidden;
     }
-
-    /* قائمة التنقل */
-    #dropdownMenu {
-      display: none;
-      position: fixed;
-      top: 50px;
-      right: 10px;
-      background-color: #222;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #000;
-      width: 180px;
-      z-index: 9999;
-      user-select: none;
+    .dropdown a {
+        display: block;
+        padding: 10px 20px;
+        color: #fff;
+        text-decoration: none;
     }
-    #dropdownMenu a {
-      display: block;
-      color: white;
-      padding: 12px 15px;
-      text-decoration: none;
-      border-bottom: 1px solid #444;
-      font-size: 16px;
+    .dropdown a:hover {
+        background-color: #444;
     }
-    #dropdownMenu a:last-child {
-      border-bottom: none;
-    }
-    #dropdownMenu a:hover {
-      background-color: #444;
-    }
-  </style>
+</style>
 </head>
 <body>
+<div class="menu" onclick="toggleDropdown()">☰</div>
+<div class="dropdown" id="dropdownMenu">
+    <a href="sales.html">المبيعات</a>
+</div>
 
-  <button id="menuBtn">⋮</button>
-  <div id="dropdownMenu">
-    <a href="index.html">الصفحة الرئيسية</a>
-    <a href="stock.html">صفحة المخزون</a>
-    <a href="#" id="closeMenu">إغلاق القائمة</a>
-  </div>
+<div class="container">
+    <div class="triangle">
+        <div class="box" id="productBox">
+            <select id="productSelect">
+                <option value="منتج1" data-price="1000" data-cost="700">منتج1</option>
+                <option value="منتج2" data-price="2000" data-cost="1200">منتج2</option>
+                <option value="منتج3" data-price="3000" data-cost="2000">منتج3</option>
+            </select>
+        </div>
+        <div class="box" id="quantityBox">
+            <input type="number" id="quantity" value="1" min="1">
+        </div>
+        <div class="box" id="totalBox">0 ل.س</div>
+    </div>
+    <button onclick="saveSale()">احفظ</button>
+</div>
 
-  <h1>سجل المبيعات</h1>
+<script>
+function toggleDropdown() {
+    const menu = document.getElementById('dropdownMenu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
 
-  <table id="salesTable">
-    <thead>
-      <tr>
-        <th>المنتج</th>
-        <th>العدد</th>
-        <th>السعر</th>
-        <th>التاريخ</th>
-        <th>الربح</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- السجلات ستُضاف هنا -->
-    </tbody>
-  </table>
+function calculateTotal() {
+    const productSelect = document.getElementById('productSelect');
+    const selectedOption = productSelect.options[productSelect.selectedIndex];
+    const price = parseFloat(selectedOption.getAttribute('data-price'));
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const total = price * quantity;
+    document.getElementById('totalBox').innerText = total.toLocaleString() + " ل.س";
+    return {
+        product: selectedOption.value,
+        price: price,
+        cost: parseFloat(selectedOption.getAttribute('data-cost')),
+        quantity: quantity,
+        total: total
+    };
+}
 
-  <div class="totals">
-    <p>📦 إجمالي المبيعات: <span id="totalSales">0</span> ل.س</p>
-    <p>💰 إجمالي الأرباح: <span id="totalProfit">0</span> ل.س</p>
-  </div>
-
-  <script>
-    // زر القائمة
-    const menuBtn = document.getElementById("menuBtn");
-    const dropdownMenu = document.getElementById("dropdownMenu");
-    const closeMenuLink = document.getElementById("closeMenu");
-
-    menuBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+function saveSale() {
+    const sale = calculateTotal();
+    let sales = JSON.parse(localStorage.getItem('sales')) || [];
+    sales.push({
+        product: sale.product,
+        quantity: sale.quantity,
+        total: sale.total,
+        cost: sale.cost,
+        date: new Date().toISOString()
     });
-    closeMenuLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      dropdownMenu.style.display = "none";
-    });
-    document.addEventListener("click", () => {
-      dropdownMenu.style.display = "none";
-    });
-    dropdownMenu.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-
-    // تحميل بيانات المبيعات
-    const salesTableBody = document.querySelector("#salesTable tbody");
-    const totalSalesEl = document.getElementById("totalSales");
-    const totalProfitEl = document.getElementById("totalProfit");
-
-    let sales = JSON.parse(localStorage.getItem("sales")) || [];
-    let products = JSON.parse(localStorage.getItem("products")) || {};
-
-    let totalSales = 0;
-    let totalProfit = 0;
-
-    sales.forEach((item) => {
-      const tr = document.createElement("tr");
-      const name = item.name || "غير معروف";
-      const quantity = item.quantity || 1;
-      const sellPrice = item.sellPrice || 0;
-      const date = item.date || "";
-      const profit = item.profit || (sellPrice - ((products[name]?.cost || 0) * quantity));
-
-      totalSales += sellPrice;
-      totalProfit += profit;
-
-      tr.innerHTML = `
-        <td>${name}</td>
-        <td>${quantity}</td>
-        <td>${sellPrice}</td>
-        <td>${date}</td>
-        <td>${profit}</td>
-      `;
-      salesTableBody.appendChild(tr);
-    });
-
-    totalSalesEl.textContent = totalSales;
-    totalProfitEl.textContent = totalProfit;
-  </script>
+    localStorage.setItem('sales', JSON.stringify(sales));
+    alert("تم حفظ المبيعات!");
+}
+</script>
 </body>
 </html>
