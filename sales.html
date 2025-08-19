@@ -3,145 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anas Store</title>
+<title>صفحة المبيعات - Anas Store</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #121212;
-        color: #fff;
-        margin: 0;
-        padding: 0;
-    }
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-    }
-    .triangle {
-        width: 0;
-        height: 0;
-        border-left: 150px solid transparent;
-        border-right: 150px solid transparent;
-        border-bottom: 150px solid #1a1a1a;
-        position: relative;
-        margin-bottom: 20px;
-    }
-    .box {
-        position: absolute;
-        width: 120px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 12px;
-        font-weight: bold;
-    }
-    #productBox { background-color: #007bff; top: 20px; left: 15px; }
-    #quantityBox { background-color: #28a745; top: 20px; right: 15px; }
-    #totalBox { background-color: #ffc107; bottom: -60px; left: 50%; transform: translateX(-50%); }
-    input[type=number] {
-        width: 80px;
-        padding: 5px;
-        border-radius: 8px;
-        border: none;
-        text-align: center;
-    }
-    button {
-        background-color: #dc3545;
-        border: none;
-        padding: 12px 24px;
-        color: #fff;
-        font-weight: bold;
-        border-radius: 12px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-    .menu {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        cursor: pointer;
-    }
-    .dropdown {
-        display: none;
-        position: absolute;
-        top: 40px;
-        right: 0;
-        background-color: #222;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    .dropdown a {
-        display: block;
-        padding: 10px 20px;
-        color: #fff;
-        text-decoration: none;
-    }
-    .dropdown a:hover {
-        background-color: #444;
-    }
+  body {
+    background-color: #1e1e1e;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background-color: #111;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #0ff;
+  }
+  main {
+    padding: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  table, th, td {
+    border: 1px solid #333;
+  }
+  th, td {
+    padding: 10px;
+    text-align: center;
+  }
+  th {
+    background-color: #222;
+  }
+  td {
+    background-color: #111;
+  }
+  .stats {
+    text-align: center;
+    margin-bottom: 20px;
+  }
 </style>
 </head>
 <body>
-<div class="menu" onclick="toggleDropdown()">☰</div>
-<div class="dropdown" id="dropdownMenu">
-    <a href="sales.html">المبيعات</a>
-</div>
-
-<div class="container">
-    <div class="triangle">
-        <div class="box" id="productBox">
-            <select id="productSelect">
-                <option value="منتج1" data-price="1000" data-cost="700">منتج1</option>
-                <option value="منتج2" data-price="2000" data-cost="1200">منتج2</option>
-                <option value="منتج3" data-price="3000" data-cost="2000">منتج3</option>
-            </select>
-        </div>
-        <div class="box" id="quantityBox">
-            <input type="number" id="quantity" value="1" min="1">
-        </div>
-        <div class="box" id="totalBox">0 ل.س</div>
-    </div>
-    <button onclick="saveSale()">احفظ</button>
-</div>
-
+<header>
+  <h1>المبيعات</h1>
+  <a href="index.html" style="color:#0ff;text-decoration:none;">🏠 الرجوع للبيع</a>
+</header>
+<main>
+  <div class="stats">
+    <p>إجمالي المبيعات: <span id="totalSales">0</span></p>
+    <p>إجمالي الربح: <span id="totalProfit">0</span></p>
+    <p>مبيعات هذا الشهر: <span id="monthSales">0</span></p>
+    <p>ربح هذا الشهر: <span id="monthProfit">0</span></p>
+  </div>
+  <h2>تفاصيل المبيعات اليومية</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>التاريخ</th>
+        <th>المنتج</th>
+        <th>الكمية</th>
+        <th>سعر القطعة</th>
+        <th>الربح</th>
+      </tr>
+    </thead>
+    <tbody id="salesTable">
+    </tbody>
+  </table>
+</main>
 <script>
-function toggleDropdown() {
-    const menu = document.getElementById('dropdownMenu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+function getSales() {
+  let sales = localStorage.getItem('anasStoreSales');
+  return sales ? JSON.parse(sales) : [];
 }
 
-function calculateTotal() {
-    const productSelect = document.getElementById('productSelect');
-    const selectedOption = productSelect.options[productSelect.selectedIndex];
-    const price = parseFloat(selectedOption.getAttribute('data-price'));
-    const quantity = parseInt(document.getElementById('quantity').value);
-    const total = price * quantity;
-    document.getElementById('totalBox').innerText = total.toLocaleString() + " ل.س";
-    return {
-        product: selectedOption.value,
-        price: price,
-        cost: parseFloat(selectedOption.getAttribute('data-cost')),
-        quantity: quantity,
-        total: total
-    };
+function updateSalesPage() {
+  const sales = getSales();
+  const tbody = document.getElementById('salesTable');
+  tbody.innerHTML = '';
+  let totalSales = 0, totalProfit = 0, monthSales = 0, monthProfit = 0;
+
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  sales.forEach(sale => {
+    const saleDate = new Date(sale.date);
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${saleDate.toLocaleDateString()}</td>
+      <td>${sale.product}</td>
+      <td>${sale.quantity}</td>
+      <td>${sale.price}</td>
+      <td>${sale.profit}</td>
+    `;
+    tbody.appendChild(row);
+
+    totalSales += sale.price * sale.quantity;
+    totalProfit += sale.profit;
+
+    if (saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear) {
+      monthSales += sale.price * sale.quantity;
+      monthProfit += sale.profit;
+    }
+  });
+
+  document.getElementById('totalSales').innerText = totalSales;
+  document.getElementById('totalProfit').innerText = totalProfit;
+  document.getElementById('monthSales').innerText = monthSales;
+  document.getElementById('monthProfit').innerText = monthProfit;
 }
 
-function saveSale() {
-    const sale = calculateTotal();
-    let sales = JSON.parse(localStorage.getItem('sales')) || [];
-    sales.push({
-        product: sale.product,
-        quantity: sale.quantity,
-        total: sale.total,
-        cost: sale.cost,
-        date: new Date().toISOString()
-    });
-    localStorage.setItem('sales', JSON.stringify(sales));
-    alert("تم حفظ المبيعات!");
-}
+updateSalesPage();
 </script>
 </body>
 </html>
