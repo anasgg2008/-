@@ -91,7 +91,6 @@
   <button id="menuBtn">⋮</button>
   <div id="dropdownMenu">
     <a href="index.html">الصفحة الرئيسية</a>
-    <a href="products.html">تعديل المنتجات</a>
     <a href="stock.html">صفحة المخزون</a>
     <a href="#" id="closeMenu">إغلاق القائمة</a>
   </div>
@@ -156,9 +155,7 @@
       const quantity = item.quantity || 1;
       const sellPrice = item.sellPrice || 0;
       const date = item.date || "";
-
-      const cost = products[name]?.cost || 0;
-      const profit = sellPrice - (cost * quantity);
+      const profit = item.profit || (sellPrice - ((products[name]?.cost || 0) * quantity));
 
       totalSales += sellPrice;
       totalProfit += profit;
